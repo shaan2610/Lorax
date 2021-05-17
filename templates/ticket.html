@@ -3,12 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Lorax | Book Ticket</title>
+  <title>home</title>
   <link rel="stylesheet" href="{% static 'css/ticket.css' %}" /> 
-  <link rel="stylesheet" href="{% static 'css/home.css' %}" />  
 </head>
 <body>  
   <center>
+    
     {% if not show %}
     <h1> Book Tickets </h1>
  <form method="POST">{% csrf_token %}
@@ -37,27 +37,13 @@
   <input type="submit" >
 </form><br>
 <a href="/logout/"> <button>logout </button></a><br>
-<p>Go back!! <a href="/dashboard/">Dashboard</a></p>
 {% endif %}
 {% if show %}
-  <div class="main">
-        <div class="logo">
-                <img src="{% static "images/logo.png" %}" alt="Lorax">
-            </div>
-            <ul>
-          <li class="active"><a href="/logout/">Logout</a></li>
-        </ul>
-      </div>
-        <div class="title">
-            <h1>Ticket Booked</h1>
-            <h2>Your Ticket No. is</h2>
-            <h2>{{ticket_no}}</h2>
-        </div>
-    <div id = "login" class="button">
-      <a href="/download_ticket/" class="btn">Download Ticket</a>
-      <a href="/ticket/" class="btn">Book Another Ticket</a>
-      <a href="/dashboard/" class="btn">Dashboard</a>
-  </div> 
+  <h1>Ticket Booked</h1><br>
+  <a href="/ticket/"><button>book another ticket</button></a><br><br>   
+  <a href="/traininfo/"><button>know about trains</button></a><br><br> 
+  <a href="/findtrains/"><button>find trains b/w stations</button></a><br><br> 
+  <a href="/logout/"> <button>logout </button></a><br><br> 
 {% endif %}
     </center>
 </body>

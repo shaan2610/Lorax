@@ -29,7 +29,4 @@ urlpatterns = [
     url(r'^traininfo/', views.traininfo),
     url(r'^findtrains/', views.findtrains),
     url(r'^ticket/', views.ticket),
-    url(r'^dashboard/', views.dashboard),
-    url(r'^download_ticket/', views.download_ticket),
-    url(r'^aboutus/', views.aboutus)
 ]

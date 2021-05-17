@@ -3,53 +3,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Lorax | Train Info</title>
+  <title>home</title>
   <link rel="stylesheet" href="{% static 'css/traininfo.css' %}" /> 
-	<link rel="stylesheet" href="{% static 'css/form_login.css' %}" type="text/css" media="all" />
 </head>
 <body>  
   <center>    
-    <section class="w3l-forms-23">
-		<div class="forms23-block-hny">
-			<div class="wrapper">
-				<a class="logo" href="#">
-					  <img src="{% static 'images/logo.png' %}" alt="Your logo" title="Your logo" style="height:100px;" />
-				</a> 
-				<br>
-				<div class="d-grid forms23-grids">
-					<div class="form23">
-						<div class="bottom-content">
-							<h3> Train Info </h3>
-							<br>
-							<form action="#" method="POST"> {% csrf_token %}
-								<input type="number" name="trainno" min="10000" max="99999" class="input-form" placeholder="Train Number"
-										required="required" />
-								<button type="submit" class="loginhny-btn btn">Submit</button>
-							</form>
-              <p>Go back!! <a href="/dashboard/">Dashboard</a></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+    <h1> Train Info </h1>
+    <form method="POST">{% csrf_token %}
+      <b>TRAIN NUMBER</b><br>
+      <input type="number" name="trainno" min="10000" max="99999"><br><br>  
+      <input type="submit"><br>
+    </form> <br>
+      <a href="/logout/"> <button> logout </button> </a><br> 
   </center>
   {% if show %}
-  <br>
-  <h2>Train</h2>
-  <br>
-  <h1>{{info.0}} - {{info.1}}</h1>
   <br>
  <table border = 1, style="width:100%">
   <tr>
     <th>Number</th>
-    <th>Train Name</th>
-    <th>Sleeper Seats</th>
-    <th>First AC Seats</th>
-    <th>Second AC Seats</th>
-    <th>Third AC Seats</th>
-    <th>Wifi</th>
-    <th>Food</th>
+    <th>Name</th>
+    <th>sleeper seats</th>
+    <th>first ac seats</th>
+    <th>second ac seats</th>
+    <th>third ac seats</th>
+    <th>wifi</th>
+    <th>food</th>
   </tr>
   <tr>
     <td>{{info.0}}</td>
@@ -79,15 +57,16 @@
     <td>{{info.11}}</td>
     <td>{{info.12}}</td>
     <td>{{info.13}}</td>
-    <td>{{info.14}}</td>  
+    <td>{{info.14}}</td>
+    <td>{{info.15}}</td>    
   </tr>  
 </table> <br>
 
 <table border = 1, style="width:100%">  
   <tr>
     <th>Station Code</th>
-    <th>Arrival Time</th>
-    <th>Departure Time</th>
+    <th>arrival time</th>
+    <th>departure time</th>
   </tr>
   {% for row in stop %}
     <tr>

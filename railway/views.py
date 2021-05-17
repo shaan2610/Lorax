@@ -9,30 +9,6 @@ import MySQLdb
 def home(request):
     return HttpResponse(render(request, "home.html"))
 
-def aboutus(request):
-	return HttpResponse(render(request, "aboutus.html"))
-	
-@login_required
-def dashboard(request):
-    return HttpResponse(render(request, "login_success.html"))
-
-@login_required
-def download_ticket(request):
-	if request.method == "POST":
-		ticketno = int(request.POST.get('ticketno'))
-		c = connection.cursor()
-		c.execute('SELECT * FROM Ticket WHERE Ticket_No = %d' %(ticketno))
-		tickets = c.fetchone()
-		c.execute('SELECT * FROM Passenger WHERE Ticket_No = %d' %(ticketno))
-		passenger = c.fetchone()
-		context = {"ticket":tickets, "passenger":passenger, "show":True}
-		if tickets == None:
-			return HttpResponse("Invalid Ticket No!!")
-		else:
-			return HttpResponse(render(request, "download_ticket.html", context))
-	else:
-		return HttpResponse(render(request, "download_ticket.html", {"show":False,}))
-
 @login_required
 def traininfo(request):
 	'''
@@ -212,8 +188,7 @@ def ticket(request):
 		for row in c.fetchall():
 			maximum = max(maximum, int(row[0]))
 
-		ticketno = (maximum + 1)
-		print(ticketno)
+		ticketno = maximum + 1
 		import datetime
 		now = datetime.datetime.now()
 		now = str(now)
@@ -240,97 +215,99 @@ def ticket(request):
 			c.execute('''UPDATE Train set Seat_Third_Class_AC = "%s" WHERE Train_No = "%s"
 				         ''' %(int(train[5])-1, tnumber))			
 
-		context = {"ticket_no":ticketno, "show":True}
-		return HttpResponse(render(request, "ticket.html", context))
+		return HttpResponse(render(request, "ticket.html", {"show":True}))
 	else:
 		return HttpResponse(render(request, "ticket.html", {"show":False}))	
 
 def signup(request):
-	if request.method == "POST":
-		username = request.POST.get('username')
-		password = request.POST.get('password')
-		email = request.POST.get('email')
-		address = request.POST.get('address')
-		fnumber = request.POST.get('fnumber')
-		snumber = request.POST.get('snumber')
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        fnumber = request.POST.get('fnumber')
+        snumber = request.POST.get('snumber')
 
-		alpha = []
-		alp = 'a'
-		for i in range(0, 26):
-			alpha.append(alp)
-			alp = chr(ord(alp) + 1)
+        alpha = []
+        alp = 'a'
+        for i in range(0, 26): 
+            alpha.append(alp) 
+            alp = chr(ord(alp) + 1)
 
-		num = []
-		zer = '0'
-		for i in range(0, 10):
-			num.append(zer)
-			zer = chr(ord(zer) + 1)
+        num = []
+        zer = '0'
+        for i in range(0, 10):
+            num.append(zer)
+            zer = chr(ord(zer) + 1)
 
-		invalid = False
+        invalid = False
 
-		if len(username) == 0:
-			invalid = True
+        if len(username) == 0:
+            invalid = True
+        
+        for c in username:
+            if ((c not in alpha) and (c not in num)):
+                invalid = True
+                break
 
-		for c in username:
-			if ((c not in alpha) and (c not in num)):
-				invalid = True
-				break
+        if invalid:
+            return HttpResponse("invalid username, characters allowed [a-z] and [0-9]")
 
-		if invalid:
-			return HttpResponse("invalid username, characters allowed [a-z] and [0-9]")
+        invalid = False
 
-		invalid = False
+        if len(password) == 0:
+            invalid = True
 
-		if len(password) == 0:
-			invalid = True
+        for c in password:
+            if c == " ":
+                invalid = True
+                break
 
-		for c in password:
-			if c == " ":
-				invalid = True
-				break
+        if invalid:
+            return HttpResponse("space not allowed in the password")
 
-		if invalid:
-			return HttpResponse("space not allowed in the password")
+        if len(address) == address.count(' '):
+            return HttpResponse("invalid address")
 
-		if len(address) == address.count(' '):
-			return HttpResponse("invalid address")
+        invalidf, invalids = False, False
 
-		invalidf, invalids = False, False
+        if len(fnumber) != 10:
+            invalidf = True
+        for c in fnumber:
+            if c not in num:
+                invalidf = True
+                break
 
-		if len(fnumber) != 10:
-			invalidf = True
+        if len(snumber) != 10:
+            invalids = True
+        for c in snumber:
+            if c not in num:
+                invalids = True
+                break
 
-		for c in fnumber:
-			if c not in num:
-				invalidf = True
-				break
+        if invalidf and invalids:
+            return HttpResponse("atleast one contact must be valid")
 
-		if len(snumber) != 10:
-			invalids = True
+        try:
+            userCreation = User.objects.create_user(username, None, password)
+            c = connection.cursor()
+            c.execute('INSERT INTO Account VALUES("%s", "%s", "%s", "%s")' %
+                      (username, password, email, address))
+            if not invalidf:
+                c.execute('INSERT INTO Contact VALUES("%s", "%s")' %
+                          (username, fnumber))
+            if not invalids:
+                c.execute('INSERT INTO Contact VALUES("%s", "%s")' %
+                          (username, snumber))
 
-		for c in snumber:
-			if c not in num:
-				invalids = True
-				break
+            return HttpResponse("signup successful! cheers")
 
-		if invalids and invalidf:
-			return HttpResponse("atleast one contact must be valid")
-
-		try:
-			userCreation = User.objects.create_user(username, None, password)
-			c = connection.cursor()
-			c.execute('INSERT INTO Account VALUES("%s", "%s", "%s", "%s")' % (username, password, email, address))
-			if not invalidf:
-				c.execute('INSERT INTO Contact VALUES("%s", "%s")' % (username, fnumber))
-			if not invalids:
-				c.execute('INSERT INTO Contact VALUES("%s", "%s")' % (username, snumber))
-			return HttpResponse(render(request, "signup_success.html"))
-		except Exception as e:
-			print(e)
-		finally:
-			connection.close()
-	else:
-		return HttpResponse(render(request, "form_signup.html"))
+        except Exception as e:
+            print(e)
+        finally:
+            connection.close()
+    else:
+        return HttpResponse(render(request, "form_signup.html"))
 
 def login_user(request):
     if request.method == "POST":
@@ -344,7 +321,21 @@ def login_user(request):
             return HttpResponse(render(request, "login_success.html"))
 
         else:
-            return HttpResponse(render(request, "login_fail.html"))
+            return HttpResponse("invalid credentials")
+
+        '''
+		try:
+			c = connection.cursor()
+			c.execute('SELECT * FROM Account WHERE Username = "%s" and Password = "%s"' %(username, password))
+			table = c.fetchall()
+			if len(table) != 1:
+				return HttpResponse("invalid credentials")
+			return HttpResponse("login successful! cheers")
+		except Exception as e:
+			print e
+		finally:
+			c.close()
+		'''
 
     return HttpResponse(render(request, "form_login.html"))
 

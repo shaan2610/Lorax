@@ -11,13 +11,13 @@ input[type=submit]
 }
 
 body {
-    background-color: gray;	
+	background-image: url("../images/train.jpg");		
 	background-repeat: no-repeat;
     background-position: right top;
 }
 
 button {
-    background-color: black; /* Green */
+    background-color: green; /* Green */
     border: none;
     color: white;
     padding: 7px 16px;
@@ -26,9 +26,7 @@ button {
     display: inline-block;
     font-size: 18px;
 }
-p {
-    color: white;
-}
+
 b {
     color: red;
 }
@@ -41,20 +39,14 @@ h1 {
 
 h2 {
     text-align: center;
-    color: black;
-    font-size: 30px;
+    color: red;
+    font-size: 3vw;
 }
 
-h4 {
-    text-align: center;
-    color: black;
-    font-weight: initial;
-    font-size: 17px;
-}
 i {
-    background-color: transparent;
+    background-color: green;
     color: white;
-    font-size: 25px;
+    font-size: 30px;
 }
 
 th {
@@ -63,7 +55,7 @@ th {
 }
 
 td {
-    background-color: blue;
+    background-color: green;
     color: white;
 }
 

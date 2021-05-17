@@ -11,10 +11,9 @@ input[type=submit]
 }
 
 body {
-	background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../images/banner1.jpg");
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
+	background-image: url("../images/train.jpg");		
+	background-repeat: no-repeat;
+    background-position: right top;
 }
 
 button {
@@ -29,19 +28,15 @@ button {
 }
 
 b {
-    color: orange;
+    color: red;
 }
 
 h1 {
     text-align: center;
-    color: black;
-    font-size: 4vw;
-}
-h2 {
-    text-align: center;
     color: white;
-    font-size: 2vw;
+    font-size: 5vw;
 }
+
 th {
     background-color: blue;
     color: white;
